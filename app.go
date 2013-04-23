@@ -9,5 +9,7 @@ func main() {
 	beego.Router("/", &root.IndexController{})
 	beego.Router("/dsr", &root.DsrController{})
 
+	beego.SetStaticPath("/static", "data")
+
 	beego.Run()
 }
