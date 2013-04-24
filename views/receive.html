@@ -1,0 +1,42 @@
+<script type="text/javascript">
+var nf = '{{.newFile}}';
+var fileExists = false;
+</script>
+<br />
+
+<div class="checking">
+自动检测中....
+</div>
+
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<script type="text/javascript">
+
+function checkfile() {
+	if ( fileExists ) {
+		return;
+	}
+
+	$.ajax({
+	  url: "/dsr?v=checkfile",
+	  data: {
+	    file: nf
+	  },
+	  success: function( data ) {
+	    $( ".checking" ).html( "<a href=\"\/static\/" + nf + "\">下载</a>" );
+	    fileExists = true
+	  },
+	  fai:function(data) {
+	  }
+	});
+}
+
+
+setInterval("checkfile()",1000);
+
+</script>
+
+<br><br>
+
+<a href="/dsr">go back</a>
+
