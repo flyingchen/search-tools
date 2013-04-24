@@ -2,9 +2,11 @@ package root
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -25,7 +27,20 @@ func (this *DsrController) Get() {
 		fmt.Println("file:", this.GetString("file"), "exists:", exists)
 		this.Data["json"] = exists
 		this.ServeJson()
+	} else if v == "getfiles" {
+		files := scanFiles("./data/out/")
+		this.Data["json"] = files
+		this.ServeJson()
 	}
+}
+
+func scanFiles(dir string) []string {
+	fs, _ := ioutil.ReadDir(dir)
+	fnames := []string{}
+	for _, f := range fs {
+		fnames = append(fnames, f.Name())
+	}
+	return fnames
 }
 
 // post file to server
@@ -52,13 +67,16 @@ func receiveFile(this *DsrController) string {
 	_, fh, err := this.Ctx.Request.FormFile("file")
 
 	if err == nil {
-		toFile := fh.Filename + "-" + strconv.Itoa(y) + "-" + m.String() + "-" + strconv.Itoa(d)
-		toFile = toFile + ".out.dat"
-		newFile := "./data/" + toFile
+		baseName := fh.Filename + "-" + strconv.Itoa(y) + "-" + m.String() + "-" + strconv.Itoa(d)
+		lastIdx := strings.LastIndex(fh.Filename, ".")
+		ext := getFileExt(fh.Filename, lastIdx+1, len(fh.Filename)-lastIdx)
+		inFile := baseName + ".in." + ext
+		newFile := "./data/" + inFile
 		fmt.Println(newFile)
 		this.SaveToFile("file", newFile)
-		processFile(newFile, toFile)
-		return toFile
+		outFile := baseName + ".out." + ext
+		processFile(newFile, outFile)
+		return outFile
 	} else {
 		panic("upload faild")
 	}
@@ -66,8 +84,12 @@ func receiveFile(this *DsrController) string {
 	return ""
 }
 
+func getFileExt(fileName string, start, length int) string {
+	return fileName[start:]
+}
+
 //调用外部应用分析文件
-func processFile(file, fileName string) {
-	cmd := exec.Command("cp", file, "d:\\"+fileName)
+func processFile(file, outFile string) {
+	cmd := exec.Command("cp", file, "./data/out/"+outFile)
 	go cmd.Run()
 }

@@ -1,4 +1,36 @@
+文件上传:<br /><br />
 <form action="/dsr" method="post" ENCTYPE="multipart/form-data">
 	<input type="file" name="file"/>
 	<input type="submit" name="btnCmt" value="提交"/>
 </form>
+<div>----------------------------------------------------</div>
+<br>已上传文件列表<br>
+<div class="files">
+
+</div>
+
+<script type="text/javascript">
+function getfiles() {
+	$.ajax({
+	  url: "/dsr?v=getfiles",
+	  data: {
+	  },
+	  success: function( data ) {
+		html = '<ul>';
+		for (f in data) {
+			file = data[f]
+			html += "<li>" + "<a href=\"\/static\/out\/"+ file + "\">" + file + "</a>" + "</li>";	
+		}
+		html += "</ul>"
+	    $( ".files" ).html(html);
+	  },
+	  fai:function(data) {
+	  }
+	});
+}
+setInterval("getfiles()",1000);
+
+</script>
+
+<br /><br />
+<a href="/">go back</a>

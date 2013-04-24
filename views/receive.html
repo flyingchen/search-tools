@@ -8,8 +8,6 @@ var fileExists = false;
 自动检测中....
 </div>
 
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-
 <script type="text/javascript">
 
 function checkfile() {
@@ -23,7 +21,7 @@ function checkfile() {
 	    file: nf
 	  },
 	  success: function( data ) {
-	    $( ".checking" ).html( "<a href=\"\/static\/" + nf + "\">下载</a>" );
+	    $( ".checking" ).html( "<a href=\"\/static\/out\/" + nf + "\">下载</a>" );
 	    fileExists = true
 	  },
 	  fai:function(data) {
