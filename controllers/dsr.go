@@ -90,6 +90,6 @@ func getFileExt(fileName string, start, length int) string {
 
 //调用外部应用分析文件
 func processFile(file, outFile string) {
-	cmd := exec.Command("cp", file, "./data/out/"+outFile)
+	cmd := exec.Command("./bin/DCG", file, "./data/out/"+outFile)
 	go cmd.Run()
 }
