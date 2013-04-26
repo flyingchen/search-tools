@@ -7,7 +7,7 @@ import (
 
 func main() {
 	beego.Router("/", &root.IndexController{})
-	beego.Router("/dsr", &root.DsrController{})
+	beego.Router("/dcg", &root.DcgController{})
 
 	beego.SetStaticPath("/static", "data")
 
